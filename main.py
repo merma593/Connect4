@@ -94,6 +94,34 @@ def horizontal_win(board, player):
                 count += 2
     if count == 6:
         return True
+
+
+def diagonal_win(board, player):
+    #checks all ascending and diagonal spaces for win
+    boardWidth = len(board)
+    boardHeight = len(board[0])
+
+    if player == 1:
+        piece = 'r'
+    else:
+        piece ='y'
+
+     # check ascending diagonal spaces
+    for x in range(boardWidth - 3):
+        for y in range(3, boardHeight):
+            if board[x][y] == piece and board[x+1][y-1] == piece and board[x+2][y-2] == piece and board[x+3][y-3] == piece:
+                return True
+
+    # check descending diagonal spaces
+    for x in range(boardWidth - 3):
+        for y in range(boardHeight - 3):
+            if board[x][y] == piece and board[x+1][y+1] == piece and board[x+2][y+2] == piece and board[x+3][y+3] == piece:
+                return True
+
+    return False
+            
+        
+    
     
                         
 def win(board, colnum, player):
@@ -101,9 +129,11 @@ def win(board, colnum, player):
     win = False
     if vertical_win(board, colnum, player) == True:
         win = True
-        
-    if horizontal_win(board, player) == True:
+    elif diagonal_win(board, player):
+        win = True        
+    elif horizontal_win(board, player) == True:
         win = True
+
         
     return win
 
