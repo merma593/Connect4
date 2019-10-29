@@ -56,11 +56,10 @@ def update_board(board, colnum, player):
         print("All spaces Full, Game over!")
 
 
-def vertical_win(board, colnum, play):
+def vertical_win(board, colnum, player):
     #checks if there is a connect 4 vertically in row
-    win = False
     count = 0
-    if play == 1:
+    if player == 1:
         piece = 'r'
     else:
         piece = 'y'
@@ -79,15 +78,33 @@ def vertical_win(board, colnum, play):
                 count = 0
                 
     if count == 4:
-        win = True
-    return win
+        return True
 
-            
-def win(board, colnum, play):
+
+def horizontal_win(board, player):
+    count = 0
+    if player == 1:
+        piece = 'r'
+    else:
+        piece ='y'
+        
+    for rows in reversed(board):
+        for x in range(len(rows)-1):
+            if rows[x] == rows[x+1] and rows[x] == piece:
+                count += 2
+    if count == 6:
+        return True
+    
+                        
+def win(board, colnum, player):
     #all possible winning methods
     win = False
-    if vertical_win(board, colnum, play) == True:
+    if vertical_win(board, colnum, player) == True:
         win = True
+        
+    if horizontal_win(board, player) == True:
+        win = True
+        
     return win
 
            
@@ -107,15 +124,16 @@ def main():
         if valid_col(colnum) == True:
             print("Placing Piece!")
             board = update_board(board, int(colnum), play)
-            display(board)            
+            display(board)
+            
             if win(board, int(colnum), play) == True:
                 print("Game over!, player: ",play, "Wins!")
                 exit()
-                
-        if play == 1:
-            play = 2
-        else:
-            play = 1
+            else:                
+                if play == 1:
+                    play = 2
+                else:
+                    play = 1
                  
     gameMoves -= 1
         
