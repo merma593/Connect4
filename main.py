@@ -27,16 +27,18 @@ def choose_column():
 
 def valid_col(colnum):
     #checks if user input is valid col number
-    valid = False
-    while int(colnum) < 0 or int(colnum) > 6:
-        print("try again, invalid input")
-        colnum = choose_column()
+
+    if int(colnum) < 0 or int(colnum) > 6:
+        print("Invalid column! Try again")
+        return False
     else:
-        valid = True
-    return valid
+        return True
+
 
 
 def update_board(board, colnum, player):
+    board = board
+    player = player
     piece = ""
     if player == 1:
         piece = 'r'
@@ -53,7 +55,10 @@ def update_board(board, colnum, player):
                 count -= 1
                 num -= 1
     else:
-        print("All spaces Full, Game over!")
+        print("All spaces Full in this column, Try another one!")
+        colnum = choose_column()
+        update_board(board, int(colnum), player)
+        return board
 
 
 def vertical_win(board, colnum, player):
@@ -163,9 +168,9 @@ def main():
                 if play == 1:
                     play = 2
                 else:
-                    play = 1
-                 
-    gameMoves -= 1
+                    play = 1                 
+        gameMoves -= 1
+
         
     
 if __name__ == "__main__":
