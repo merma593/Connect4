@@ -32,7 +32,6 @@ def valid_col(colnum):
         print("try again, invalid input")
         colnum = choose_column()
     else:
-        print(colnum)
         valid = True
     return valid
 
@@ -56,29 +55,72 @@ def update_board(board, colnum, player):
     else:
         print("All spaces Full, Game over!")
 
+
+def vertical_win(board, colnum, play):
+    #checks if there is a connect 4 vertically in row
+    win = False
+    count = 0
+    if play == 1:
+        piece = 'r'
+    else:
+        piece = 'y'
+        
+    if piece == 'r':   
+        for rows in reversed(board):
+            if rows[colnum] == piece:
+                count += 1
+            elif rows[colnum] == 'y':
+                count = 0
+    if piece == 'y':   
+        for rows in reversed(board):
+            if rows[colnum] == piece:
+                count += 1
+            elif rows[colnum] == 'r':
+                count = 0
+                
+    if count == 4:
+        win = True
+    return win
+
+            
+def win(board, colnum, play):
+    #all possible winning methods
+    win = False
+    if vertical_win(board, colnum, play) == True:
+        win = True
+    return win
+
            
 def main():
-    gameMoves = 42
+    gameMoves = 42 #Max amount of moves on 6 x 7 board
     board = create_board()
     display(board)
     player1 = 1
     player2 = 2
     play = who_goes_first(player1, player2)
     print("Welcome to connect 4! Player:", play, "will start.")
+    
     while gameMoves >= 0:
         print("Player", play, "Turn!")
         colnum = choose_column()
+        
         if valid_col(colnum) == True:
             print("Placing Piece!")
             board = update_board(board, int(colnum), play)
-            display(board)
-            if play == 1:
-                play = 2
-            else:
-                play = 1
+            display(board)            
+            if win(board, int(colnum), play) == True:
+                print("Game over!, player: ",play, "Wins!")
+                exit()
+                
+        if play == 1:
+            play = 2
+        else:
+            play = 1
+                 
     gameMoves -= 1
         
     
-main()
+if __name__ == "__main__":
+    main()
     
     
