@@ -1,6 +1,14 @@
 import numpy as np
 import sys
 import random as rand
+import pygame
+import math
+
+
+BLUE = (0,0,255)
+BLACK = (0,0,0)
+RED = (255, 0, 0)
+YELLOW = (255, 255, 0)
 
 def create_board():
     #Creates a 7 x 6 matrix of 0s
@@ -142,7 +150,22 @@ def win(board, colnum, player):
         
     return win
 
-           
+
+def draw_game(screen, board, SQUARESIZE):
+    #draws blue outline and circles on board
+    RADIUS = int(SQUARESIZE/2 - 5)
+    for cols in range(7):
+        for rows in range(6):
+            pygame.draw.rect(screen, BLUE, (cols * SQUARESIZE, rows * SQUARESIZE + SQUARESIZE, SQUARESIZE, SQUARESIZE))
+            if board[rows][cols] == '0':
+                pygame.draw.circle(screen, BLACK, (int(cols * SQUARESIZE + SQUARESIZE/2),int(rows * SQUARESIZE + SQUARESIZE+SQUARESIZE/2)), RADIUS) 
+            elif board[rows][cols] == 'r':
+                pygame.draw.circle(screen, RED, (int(cols * SQUARESIZE + SQUARESIZE/2),int(rows * SQUARESIZE + SQUARESIZE+SQUARESIZE/2)), RADIUS)
+            else:
+                pygame.draw.circle(screen, YELLOW, (int(cols * SQUARESIZE + SQUARESIZE/2),int(rows * SQUARESIZE + SQUARESIZE+SQUARESIZE/2)), RADIUS)
+    pygame.display.update()
+
+    
 def main():
     gameMoves = 42 #Max amount of moves on 6 x 7 board
     board = create_board()
@@ -151,25 +174,57 @@ def main():
     player2 = 2
     play = who_goes_first(player1, player2)
     print("Welcome to connect 4! Player:", play, "will start.")
+
+    pygame.init()
+
+    SQUARESIZE = 100
+    width = 7 * SQUARESIZE
+    height = 7 * SQUARESIZE
+
+    size = (width, height)
+
+    screen = pygame.display.set_mode(size)
+    draw_game(screen, board, SQUARESIZE)
+    pygame.display.update()
+    font = pygame.font.SysFont("monospace", 40) #font for win text
+    
     
     while gameMoves >= 0:
-        print("Player", play, "Turn!")
-        colnum = choose_column()
-        
-        if valid_col(colnum) == True:
-            print("Placing Piece!")
-            board = update_board(board, int(colnum), play)
-            display(board)
-            
-            if win(board, int(colnum), play) == True:
-                print("Game over!, player: ",play, "Wins!")
-                exit()
-            else:                
-                if play == 1:
-                    play = 2
-                else:
-                    play = 1                 
-        gameMoves -= 1
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.display.quit()
+                pygame.quit()
+                sys.exit()
+                
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                print(event.pos)
+                print("Player", play, "Turn!")
+                #colnum = choose_column() for cmd line game
+                posx = event.pos[0]
+                col = int(math.floor(posx/SQUARESIZE)) #finds column based on user click
+                        
+                if valid_col(col) == True: #valid col for cmd line game
+                    print("Placing Piece!")
+                    board = update_board(board, int(col), play)
+                    display(board) 
+                    draw_game(screen, board, SQUARESIZE)
+                            
+                    if win(board, int(col), play) == True:
+                        #print("Game over!, player: ",play, "Wins!") cmd line game
+                        if play == 1:
+                            label = font.render(("Game over!, player 1 Wins!"),1, RED)
+                        else:
+                            label = font.render(("Game over!, player 2 Wins!"),1, YELLOW)
+                        screen.blit(label, (40,10))
+                        draw_game(screen, board, SQUARESIZE)
+                        exit()
+                    else:                
+                        if play == 1:
+                            play = 2
+                        else:
+                            play = 1                 
+                    gameMoves -= 1
 
         
     
