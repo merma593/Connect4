@@ -4,11 +4,12 @@ import random as rand
 import pygame
 import math
 
-
+#GLOBALS
 BLUE = (0,0,255)
 BLACK = (0,0,0)
 RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
+
 
 def create_board():
     #Creates a 7 x 6 matrix of 0s
@@ -17,6 +18,7 @@ def create_board():
 
 
 def display(board):
+    #Displays the board in cmd line
     for rows in board:
         print(' '.join(rows))
         
@@ -29,6 +31,7 @@ def who_goes_first(p1, p2):
         return p2
 
 def choose_column():
+    #was for original cmd line game
     col = input("Choose a column from 0-6: ")
     return col
 
@@ -45,9 +48,7 @@ def valid_col(colnum):
 
 
 def update_board(board, colnum, player):
-    board = board
-    player = player
-    piece = ""
+
     if player == 1:
         piece = 'r'
     else:
@@ -95,18 +96,20 @@ def vertical_win(board, colnum, player):
 
 
 def horizontal_win(board, player):
+    cols = len(board)
+    rows = len(board[0])
+
     count = 0
     if player == 1:
         piece = 'r'
     else:
         piece ='y'
         
-    for rows in reversed(board):
-        for x in range(len(rows)-1):
-            if rows[x] == rows[x+1] and rows[x] == piece:
-                count += 2
-    if count == 6:
-        return True
+    for rows in range(cols):
+        for x in range(rows):
+            if board[rows][x] == piece and board[rows][x+1] == piece and board[rows][x+2] == piece and board[rows][x+3] == piece:
+                return True
+
 
 
 def diagonal_win(board, player):
@@ -141,10 +144,13 @@ def win(board, colnum, player):
     #all possible winning methods
     win = False
     if vertical_win(board, colnum, player) == True:
+        print("Vert win")
         win = True
     elif diagonal_win(board, player):
+        print("Diag win")
         win = True        
     elif horizontal_win(board, player) == True:
+        print("Hoz win")
         win = True
 
         
