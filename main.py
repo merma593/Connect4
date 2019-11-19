@@ -179,6 +179,7 @@ def main():
     SQUARESIZE = 100
     width = 7 * SQUARESIZE
     height = 7 * SQUARESIZE
+    RADIUS = int(SQUARESIZE/2 - 5)
 
     size = (width, height)
 
@@ -195,6 +196,17 @@ def main():
                 pygame.display.quit()
                 pygame.quit()
                 sys.exit()
+
+            if event.type == pygame.MOUSEMOTION:
+                pygame.draw.rect(screen, BLACK, (0,0,width,SQUARESIZE))
+                posx = event.pos[0]
+                if play == 1:
+                    pygame.draw.circle(screen, RED, (posx, int(SQUARESIZE/2)),RADIUS)
+                else:
+                    pygame.draw.circle(screen, YELLOW, (posx, int(SQUARESIZE/2)),RADIUS)
+            pygame.display.update()
+                    
+                    
                 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 print(event.pos)
