@@ -96,8 +96,8 @@ def vertical_win(board, colnum, player):
 
 
 def horizontal_win(board, player):
-    cols = len(board)
-    rows = len(board[0])
+    boardWidth = len(board)
+    boardHeight = len(board[0])
 
     count = 0
     if player == 1:
@@ -105,8 +105,8 @@ def horizontal_win(board, player):
     else:
         piece ='y'
         
-    for rows in range(cols):
-        for x in range(rows):
+    for rows in range(boardWidth):
+        for x in range(boardHeight-3):
             if board[rows][x] == piece and board[rows][x+1] == piece and board[rows][x+2] == piece and board[rows][x+3] == piece:
                 return True
 
