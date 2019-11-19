@@ -72,27 +72,20 @@ def update_board(board, colnum, player):
 
 def vertical_win(board, colnum, player):
     #checks if there is a connect 4 vertically in row
-    count = 0
+    boardWidth = len(board)
+    boardHeight = len(board[0])
+    
     if player == 1:
         piece = 'r'
     else:
         piece = 'y'
+
+    for rows in range(boardHeight):
+        for x in range(boardWidth-3):
+            if board[x][rows] == piece and board[x+1][rows] == piece and board[x+2][rows] == piece and board[x+3][rows] == piece:
+                return True
         
-    if piece == 'r':   
-        for rows in reversed(board):
-            if rows[colnum] == piece:
-                count += 1
-            elif rows[colnum] == 'y':
-                count = 0
-    if piece == 'y':   
-        for rows in reversed(board):
-            if rows[colnum] == piece:
-                count += 1
-            elif rows[colnum] == 'r':
-                count = 0
-                
-    if count == 4:
-        return True
+    
 
 
 def horizontal_win(board, player):
